@@ -53,17 +53,19 @@ import { ProfilingModule } from '../common/profiling/profiling.module';
       useFactory: (configService: ConfigService) => {
         const host = configService.get<string>('REDIS_HOST', 'localhost');
         const port = configService.get<number>('REDIS_PORT', 6379);
+        // Cast to `any` to avoid transient type mismatches between ioredis
+        // minor versions in the lockfile during developer installs.
         return new IORedis({
           host,
           port,
           maxRetriesPerRequest: null,
-        });
+        }) as any;
       },
       inject: [ConfigService],
     },
     {
       provide: PORTFOLIO_SNAPSHOT_QUEUE,
-      useFactory: (connection: IORedis) =>
+      useFactory: (connection: any) =>
         new Queue(PORTFOLIO_SNAPSHOT_QUEUE_NAME, {
           connection,
           defaultJobOptions: {

@@ -25,7 +25,7 @@ export class LoggerMiddleware implements NestMiddleware {
     ): void => {
       const duration = Date.now() - startTime;
       const requestId =
-        typeof req.requestId === 'string' ? req.requestId : 'unknown';
+        typeof (req as any).requestId === 'string' ? (req as any).requestId : 'unknown';
       const message = `[Request:${requestId}] ${req.method} ${req.url} - ${res.statusCode} - ${duration}ms`;
 
       // Log based on status code

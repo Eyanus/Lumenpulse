@@ -21,8 +21,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = this.getStatus(exception);
-    const requestId =
-      typeof request.requestId === 'string' ? request.requestId : 'unknown';
+      const requestId =
+        typeof (request as any).requestId === 'string' ? (request as any).requestId : 'unknown';
     const errorResponse = this.buildErrorResponse(exception, status, requestId);
 
     response.setHeader(REQUEST_ID_HEADER, requestId);

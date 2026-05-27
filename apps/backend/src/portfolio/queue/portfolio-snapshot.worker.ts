@@ -44,7 +44,7 @@ export class PortfolioSnapshotWorker implements OnModuleInit, OnModuleDestroy {
       PortfolioSnapshotBatchJobData | PortfolioSnapshotUserJobData
     >,
     @Inject(PORTFOLIO_SNAPSHOT_CONNECTION)
-    private readonly connection: IORedis,
+    private readonly connection: any,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly portfolioService: PortfolioService,
