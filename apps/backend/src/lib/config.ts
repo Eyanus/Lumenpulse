@@ -418,6 +418,12 @@ const envSchema = z
     STELLAR_RETRY_ATTEMPTS: z.coerce.number().int().min(0).default(3),
     STELLAR_RETRY_DELAY: z.coerce.number().int().min(0).default(1_000),
     STELLAR_SERVER_SECRET: z.string().min(1), // SECRET — never log
+    STELLAR_BALANCE_CACHE_TTL: z.coerce.number().int().min(1).default(30_000),
+    STELLAR_OPERATIONS_CACHE_TTL: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .default(15_000),
 
     // Soroban contract addresses (optional — null when not yet deployed)
     STELLAR_CONTRACT_LUMEN_TOKEN: z.string().trim().optional(),
@@ -993,6 +999,8 @@ export const config = Object.freeze({
     timeout: parsedEnv.STELLAR_TIMEOUT,
     retryAttempts: parsedEnv.STELLAR_RETRY_ATTEMPTS,
     retryDelay: parsedEnv.STELLAR_RETRY_DELAY,
+    balanceCacheTTL: parsedEnv.STELLAR_BALANCE_CACHE_TTL,
+    operationsCacheTTL: parsedEnv.STELLAR_OPERATIONS_CACHE_TTL,
     serverSecret: new SecretString(parsedEnv.STELLAR_SERVER_SECRET),
     contracts: Object.freeze({
       lumenToken: parsedEnv.STELLAR_CONTRACT_LUMEN_TOKEN ?? null,
@@ -1002,7 +1010,6 @@ export const config = Object.freeze({
         parsedEnv.STELLAR_CONTRACT_CONTRIBUTOR_REGISTRY ?? null,
       matchingPool: parsedEnv.STELLAR_CONTRACT_MATCHING_POOL ?? null,
       treasury: parsedEnv.STELLAR_CONTRACT_TREASURY ?? null,
-      vestingWallet: parsedEnv.STELLAR_CONTRACT_VESTING_WALLET ?? null,
     }),
   }),
   auth: Object.freeze({

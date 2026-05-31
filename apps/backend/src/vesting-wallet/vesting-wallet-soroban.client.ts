@@ -60,7 +60,7 @@ export class VestingWalletSorobanClient {
   private readonly logger = new Logger(VestingWalletSorobanClient.name);
 
   private getContractId(): string {
-    const contractId = config.stellar.contracts.vestingWallet;
+    const contractId = config.stellar.contracts.contributorRegistry;
     if (!contractId || !StrKey.isValidContract(contractId)) {
       throw new VestingWalletNotConfiguredException();
     }
@@ -129,7 +129,11 @@ export class VestingWalletSorobanClient {
 
       const simulation = await server.simulateTransaction(tx);
       if (rpc.Api.isSimulationError(simulation)) {
-        throw toVestingWalletException(simulation.error, params.beneficiary);
+        const simError = simulation.error;
+        throw toVestingWalletException(
+          typeof simError === 'string' ? simError : String(simError),
+          params.beneficiary,
+        );
       }
 
       const prepared = rpc.assembleTransaction(tx, simulation).build();
@@ -181,7 +185,11 @@ export class VestingWalletSorobanClient {
 
       const simulation = await server.simulateTransaction(tx);
       if (rpc.Api.isSimulationError(simulation)) {
-        throw toVestingWalletException(simulation.error, params.beneficiary);
+        const simError = simulation.error;
+        throw toVestingWalletException(
+          typeof simError === 'string' ? simError : String(simError),
+          params.beneficiary,
+        );
       }
 
       const prepared = rpc.assembleTransaction(tx, simulation).build();
@@ -249,7 +257,11 @@ export class VestingWalletSorobanClient {
 
       const simulation = await server.simulateTransaction(tx);
       if (rpc.Api.isSimulationError(simulation)) {
-        throw toVestingWalletException(String(simulation.error), beneficiary);
+        const simError = simulation.error;
+        throw toVestingWalletException(
+          typeof simError === 'string' ? simError : String(simError),
+          beneficiary,
+        );
       }
 
       const claimable = scValToNative(simulation.result!.retval) as bigint;
@@ -285,7 +297,9 @@ export class VestingWalletSorobanClient {
     }
   }
 
-  private normalizeError(error: unknown): Error {
+  private normalizeError(
+    error: unknown,
+  ): VestingWalletRpcUnavailableException | Error {
     if (
       error &&
       typeof error === 'object' &&
