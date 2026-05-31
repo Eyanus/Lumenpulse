@@ -377,19 +377,11 @@ const envSchema = z
 
     RATE_LIMIT_NEWS_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_NEWS_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
-    RATE_LIMIT_NEWS_READ_BLOCK_MS: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .optional(),
+    RATE_LIMIT_NEWS_READ_BLOCK_MS: z.coerce.number().int().min(1).optional(),
 
     RATE_LIMIT_PROJECT_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_PROJECT_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
-    RATE_LIMIT_PROJECT_READ_BLOCK_MS: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .optional(),
+    RATE_LIMIT_PROJECT_READ_BLOCK_MS: z.coerce.number().int().min(1).optional(),
 
     RATE_LIMIT_CROWDFUND_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_CROWDFUND_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
@@ -401,19 +393,11 @@ const envSchema = z
 
     RATE_LIMIT_STELLAR_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_STELLAR_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
-    RATE_LIMIT_STELLAR_READ_BLOCK_MS: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .optional(),
+    RATE_LIMIT_STELLAR_READ_BLOCK_MS: z.coerce.number().int().min(1).optional(),
 
     RATE_LIMIT_SEARCH_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_SEARCH_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
-    RATE_LIMIT_SEARCH_READ_BLOCK_MS: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .optional(),
+    RATE_LIMIT_SEARCH_READ_BLOCK_MS: z.coerce.number().int().min(1).optional(),
 
     RATE_LIMIT_ANALYTICS_READ_LIMIT: z.coerce.number().int().min(1).optional(),
     RATE_LIMIT_ANALYTICS_READ_TTL_MS: z.coerce.number().int().min(1).optional(),
@@ -599,11 +583,9 @@ const resolvedRateLimit = {
   },
   newsRead: {
     limit:
-      parsedEnv.RATE_LIMIT_NEWS_READ_LIMIT ??
-      rateLimitDefaults.newsRead.limit,
+      parsedEnv.RATE_LIMIT_NEWS_READ_LIMIT ?? rateLimitDefaults.newsRead.limit,
     ttl:
-      parsedEnv.RATE_LIMIT_NEWS_READ_TTL_MS ??
-      rateLimitDefaults.newsRead.ttl,
+      parsedEnv.RATE_LIMIT_NEWS_READ_TTL_MS ?? rateLimitDefaults.newsRead.ttl,
     blockDuration:
       parsedEnv.RATE_LIMIT_NEWS_READ_BLOCK_MS ??
       rateLimitDefaults.newsRead.blockDuration,
@@ -752,14 +734,8 @@ const optionalSummary = [
     'RATE_LIMIT_WATCHLIST_WRITE_BLOCK_MS',
     String(resolvedRateLimit.watchlistWrite.blockDuration),
   ],
-  [
-    'RATE_LIMIT_NEWS_READ_LIMIT',
-    String(resolvedRateLimit.newsRead.limit),
-  ],
-  [
-    'RATE_LIMIT_NEWS_READ_TTL_MS',
-    String(resolvedRateLimit.newsRead.ttl),
-  ],
+  ['RATE_LIMIT_NEWS_READ_LIMIT', String(resolvedRateLimit.newsRead.limit)],
+  ['RATE_LIMIT_NEWS_READ_TTL_MS', String(resolvedRateLimit.newsRead.ttl)],
   [
     'RATE_LIMIT_NEWS_READ_BLOCK_MS',
     String(resolvedRateLimit.newsRead.blockDuration),
@@ -768,10 +744,7 @@ const optionalSummary = [
     'RATE_LIMIT_PROJECT_READ_LIMIT',
     String(resolvedRateLimit.projectRead.limit),
   ],
-  [
-    'RATE_LIMIT_PROJECT_READ_TTL_MS',
-    String(resolvedRateLimit.projectRead.ttl),
-  ],
+  ['RATE_LIMIT_PROJECT_READ_TTL_MS', String(resolvedRateLimit.projectRead.ttl)],
   [
     'RATE_LIMIT_PROJECT_READ_BLOCK_MS',
     String(resolvedRateLimit.projectRead.blockDuration),
@@ -792,22 +765,13 @@ const optionalSummary = [
     'RATE_LIMIT_STELLAR_READ_LIMIT',
     String(resolvedRateLimit.stellarRead.limit),
   ],
-  [
-    'RATE_LIMIT_STELLAR_READ_TTL_MS',
-    String(resolvedRateLimit.stellarRead.ttl),
-  ],
+  ['RATE_LIMIT_STELLAR_READ_TTL_MS', String(resolvedRateLimit.stellarRead.ttl)],
   [
     'RATE_LIMIT_STELLAR_READ_BLOCK_MS',
     String(resolvedRateLimit.stellarRead.blockDuration),
   ],
-  [
-    'RATE_LIMIT_SEARCH_READ_LIMIT',
-    String(resolvedRateLimit.searchRead.limit),
-  ],
-  [
-    'RATE_LIMIT_SEARCH_READ_TTL_MS',
-    String(resolvedRateLimit.searchRead.ttl),
-  ],
+  ['RATE_LIMIT_SEARCH_READ_LIMIT', String(resolvedRateLimit.searchRead.limit)],
+  ['RATE_LIMIT_SEARCH_READ_TTL_MS', String(resolvedRateLimit.searchRead.ttl)],
   [
     'RATE_LIMIT_SEARCH_READ_BLOCK_MS',
     String(resolvedRateLimit.searchRead.blockDuration),
