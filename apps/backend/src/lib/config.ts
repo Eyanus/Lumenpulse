@@ -45,6 +45,7 @@ import { z } from 'zod';
  * - STELLAR_CONTRACT_CONTRIBUTOR_REGISTRY
  * - STELLAR_CONTRACT_MATCHING_POOL
  * - STELLAR_CONTRACT_TREASURY
+ * - STELLAR_CONTRACT_VESTING_WALLET
  * - WEBHOOK_SECRET
  * - WEBHOOK_PROVIDERS
  * - TELEGRAM_BOT_TOKEN
@@ -425,6 +426,7 @@ const envSchema = z
     STELLAR_CONTRACT_CONTRIBUTOR_REGISTRY: z.string().trim().optional(),
     STELLAR_CONTRACT_MATCHING_POOL: z.string().trim().optional(),
     STELLAR_CONTRACT_TREASURY: z.string().trim().optional(),
+    STELLAR_CONTRACT_VESTING_WALLET: z.string().trim().optional(),
 
     PYTHON_API_URL: z.string().trim().default('http://localhost:8000'),
     PYTHON_SERVICE_URL: z.string().trim().optional(),
@@ -820,6 +822,10 @@ const optionalSummary = [
     'STELLAR_CONTRACT_TREASURY',
     parsedEnv.STELLAR_CONTRACT_TREASURY ?? '(not set)',
   ],
+  [
+    'STELLAR_CONTRACT_VESTING_WALLET',
+    parsedEnv.STELLAR_CONTRACT_VESTING_WALLET ?? '(not set)',
+  ],
   ['PYTHON_API_URL', parsedEnv.PYTHON_API_URL],
   [
     'PYTHON_SERVICE_URL',
@@ -981,6 +987,7 @@ export const config = Object.freeze({
         parsedEnv.STELLAR_CONTRACT_CONTRIBUTOR_REGISTRY ?? null,
       matchingPool: parsedEnv.STELLAR_CONTRACT_MATCHING_POOL ?? null,
       treasury: parsedEnv.STELLAR_CONTRACT_TREASURY ?? null,
+      vestingWallet: parsedEnv.STELLAR_CONTRACT_VESTING_WALLET ?? null,
     }),
   }),
   auth: Object.freeze({
