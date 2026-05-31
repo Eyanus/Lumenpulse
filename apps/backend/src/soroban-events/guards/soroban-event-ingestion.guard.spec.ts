@@ -24,9 +24,7 @@ describe('SorobanEventIngestionGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<SorobanEventIngestionGuard>(
-      SorobanEventIngestionGuard,
-    );
+    guard = module.get<SorobanEventIngestionGuard>(SorobanEventIngestionGuard);
   });
 
   function createMockContext(
@@ -189,11 +187,7 @@ describe('SorobanEventIngestionGuard', () => {
       const body = Buffer.from(
         '{"txHash":"abc","eventIndex":0,"rawPayload":{}}',
       );
-      const signature = generateValidSignature(
-        body,
-        futureTimestamp,
-        nonce,
-      );
+      const signature = generateValidSignature(body, futureTimestamp, nonce);
 
       const context = createMockContext({
         rawBody: body,
@@ -213,11 +207,7 @@ describe('SorobanEventIngestionGuard', () => {
       const body = Buffer.from(
         '{"txHash":"abc","eventIndex":0,"rawPayload":{}}',
       );
-      const signature = generateValidSignature(
-        body,
-        expiredTimestamp,
-        nonce,
-      );
+      const signature = generateValidSignature(body, expiredTimestamp, nonce);
 
       const context = createMockContext({
         rawBody: body,
@@ -237,11 +227,7 @@ describe('SorobanEventIngestionGuard', () => {
       const originalBody = Buffer.from(
         '{"txHash":"abc","eventIndex":0,"rawPayload":{}}',
       );
-      const signature = generateValidSignature(
-        originalBody,
-        timestamp,
-        nonce,
-      );
+      const signature = generateValidSignature(originalBody, timestamp, nonce);
 
       const tamperedBody = Buffer.from(
         '{"txHash":"tampered","eventIndex":0,"rawPayload":{}}',

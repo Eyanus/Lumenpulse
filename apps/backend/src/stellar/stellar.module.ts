@@ -8,6 +8,8 @@ import { ContractRotationService } from './services/contract-rotation.service';
 import { StellarContractRotationService } from './services/stellar-contract-rotation.service';
 import { AuditModule } from '../audit/audit.module';
 import { AppConfigModule } from '../config/config.module';
+import { SorobanRpcClientService } from './services/soroban-rpc-client.service';
+import { MatchingPoolAdminController } from './controllers/matching-pool-admin.controller';
 
 @Module({
   imports: [
@@ -16,14 +18,16 @@ import { AppConfigModule } from '../config/config.module';
     AuditModule,
     AppConfigModule,
   ],
-  controllers: [StellarController],
+  controllers: [StellarController, MatchingPoolAdminController],
   providers: [
     StellarService,
+    SorobanRpcClientService,
     ContractRotationService,
     StellarContractRotationService,
   ],
   exports: [
     StellarService,
+    SorobanRpcClientService,
     ContractRotationService,
     StellarContractRotationService,
   ],

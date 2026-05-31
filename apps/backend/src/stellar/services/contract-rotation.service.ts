@@ -10,6 +10,7 @@ import {
 } from '@stellar/stellar-sdk';
 import { config } from '../../lib/config';
 import { ContractValidationResultDto } from '../dto/rotate-contract-ids.dto';
+import { SorobanRpcClientService } from './soroban-rpc-client.service';
 
 const NETWORK_PASSPHRASES = {
   testnet: 'Test SDF Network ; September 2015',
@@ -45,6 +46,8 @@ interface SimulationContext {
 
 @Injectable()
 export class ContractRotationService {
+  constructor(private readonly sorobanRpc: SorobanRpcClientService) {}
+
   /**
    * Validates that new contract IDs are reachable and callable on the network.
    * Performs read-only simulation transactions to verify the contracts exist
@@ -172,23 +175,18 @@ export class ContractRotationService {
   private async loadSimulationContext(
     network: 'testnet' | 'mainnet',
   ): Promise<SimulationContext> {
-    const sorobanRpcUrl = this.getSorobanRpcUrl(network);
-
-    const server = new rpc.Server(sorobanRpcUrl, {
-      timeout: config.stellar.timeout,
-      allowHttp: sorobanRpcUrl.startsWith('http://'),
-    });
-
     const sourcePublicKey = Keypair.fromSecret(
       config.stellar.serverSecret.reveal(),
     ).publicKey();
-    const sourceAccount = await server.getAccount(sourcePublicKey);
+
+    const account = await this.sorobanRpc.getAccount(sourcePublicKey);
+    const networkPassphrase = NETWORK_PASSPHRASES[network];
 
     return {
-      server,
-      sourceAccountId: sourceAccount.accountId(),
-      sourceSequence: sourceAccount.sequenceNumber(),
-      networkPassphrase: NETWORK_PASSPHRASES[network],
+      server: this.sorobanRpc.rawServer,
+      sourceAccountId: account.accountId(),
+      sourceSequence: account.sequenceNumber(),
+      networkPassphrase,
     };
   }
 
@@ -205,30 +203,13 @@ export class ContractRotationService {
     contractId: string,
     method: string,
   ): Promise<void> {
-    const tx = new TransactionBuilder(
-      new Account(context.sourceAccountId, context.sourceSequence),
-      {
-        fee: BASE_FEE,
-        networkPassphrase: context.networkPassphrase,
-      },
-    )
-      .addOperation(new Contract(contractId).call(method))
-      .setTimeout(30)
-      .build();
-
-    const simulation = await context.server.simulateTransaction(tx);
-
-    if (rpc.Api.isSimulationError(simulation)) {
-      throw new Error(
-        `Simulation error for method '${method}': ${simulation.error || 'Unknown error'}`,
-      );
-    }
-
-    if (!simulation.result) {
-      throw new Error(
-        `Simulation failed for method '${method}': No result returned`,
-      );
-    }
+    await this.sorobanRpc.simulateContractRead(
+      context.sourceAccountId,
+      context.sourceSequence,
+      contractId,
+      method,
+      context.networkPassphrase,
+    );
   }
 
   /**
