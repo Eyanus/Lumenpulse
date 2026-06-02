@@ -128,7 +128,8 @@ export class SorobanEventIndexerService {
     let indexed = 0;
     let cursor: string | undefined;
 
-    do {
+    let hasMore = true;
+    while (hasMore) {
       const request: rpc.Server.GetEventsRequest = {
         startLedger,
         filters: [],
@@ -158,9 +159,9 @@ export class SorobanEventIndexerService {
       // Stop if the last event is beyond our range or no more pages
       const lastLedger = Number(lastEvent?.ledger ?? 0);
       if (lastLedger > endLedger || response.events.length < PAGE_LIMIT) {
-        break;
+        hasMore = false;
       }
-    } while (true);
+    }
 
     return indexed;
   }
