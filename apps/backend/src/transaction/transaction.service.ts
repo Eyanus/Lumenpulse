@@ -68,8 +68,20 @@ export class TransactionService {
     cursor?: string,
   ): Promise<{ transactions: TransactionDto[]; nextPage?: string }> {
     try {
-      const { transactions: horizonTransactions, nextPage } =
-        await this.horizonClient.getTransactions(publicKey, limit, cursor);
+      let url = `${this.horizonUrl}/accounts/${publicKey}/transactions?order=desc&limit=${limit}`;
+      if (cursor) {
+        url += `&cursor=${cursor}`;
+      }
+
+      const response = await fetch(url);
+      const data = (await response.json()) as
+        HorizonResponse | HorizonErrorResponse;
+
+      if (!response.ok) {
+        const errorDetail = (data as HorizonErrorResponse).detail;
+        const errorMessage = errorDetail || 'Failed to fetch transactions';
+        throw new Error(errorMessage);
+      }
 
       const transactions = await this.processTransactions(
         horizonTransactions,
