@@ -23,11 +23,11 @@ function pick(obj: unknown, field: string): string | null {
   if (!obj || typeof obj !== 'object') return null;
   const val = (obj as Record<string, unknown>)[field];
   if (val === undefined || val === null) return null;
-  if (typeof val === 'object' || typeof val === 'function') {
-    return JSON.stringify(val);
-  }
-  // val is string | number | boolean | bigint | symbol at this point
-  return String(val as string | number | boolean | bigint);
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number') return val.toString(10);
+  if (typeof val === 'boolean') return val ? 'true' : 'false';
+  if (typeof val === 'bigint') return val.toString(10);
+  return JSON.stringify(val);
 }
 
 @Injectable()
